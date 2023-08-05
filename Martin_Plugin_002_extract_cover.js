@@ -44,15 +44,17 @@ const plugin = (file, librarySettings, inputs, otherArguments) => {
     for (const stream of file.ffProbeData.streams) {
         if (stream.disposition.attached_pic == 1) {
             response.processFile = true;
-            response.preset = `<io>  -map 0:v -map -0:V -c copy "${inputs.storage_path}/${file.meta.FileName}.jpg" -map 0 -c copy `;
+            response.preset = `<io>  -map 0:v -map -0:V -c copy "${coverImagePath}" -map 0 -c copy `;
             response.container = `.` + file.container;
             response.handBrakeMode = false;
             response.FFmpegMode = true;
             response.reQueueAfter = true;
             response.infoLog += 'Found cover image in file. Extracting it.\n';
-            break;
+            return response;
         }
     }
+
+    response.infoLog += 'No cover image found in file. Skipping.\n';
 
     return response;
 };
