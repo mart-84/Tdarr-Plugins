@@ -34,7 +34,8 @@ const plugin = (file, librarySettings, inputs, otherArguments) => {
 
     const fs = require('fs');
     const path = require('path');
-    const coverImagePath = path.join(inputs.storage_path, otherArguments.originalLibraryFile.meta.FileName + '.jpg');
+    const fileName = path.parse(otherArguments.originalLibraryFile.meta.FileName).name;
+    const coverImagePath = path.join(inputs.storage_path, fileName + '.jpg');
     if (!fs.existsSync(coverImagePath)) {
         response.infoLog += 'Cover image not found. Skipping.\n';
         return response;
