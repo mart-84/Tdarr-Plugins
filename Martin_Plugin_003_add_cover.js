@@ -53,8 +53,18 @@ const plugin = (file, librarySettings, inputs, otherArguments) => {
         }
     }
 
+    response.infoLog += 'Adding cover image to video file\n';
+
     // Add the cover image to the video file
-    let command = `"${ffmpegPath}" -i "${file.file}" -i "${coverImagePath}" -map 1 -map 0 -c copy -disposition:0 attached_pic "${file.file}_temp.${file.container}"`;
+    let command;
+    if (file.container == 'mp4') {
+        command = `"${ffmpegPath}" -i "${file.file}" -i "${coverImagePath}" -map 0 -map 1 -c copy -disposition:1 attached_pic "${file.file}_temp.${file.container}"`;
+    } else if (file.container == 'mkv') {
+        command = `"${ffmpegPath}" -i "${file.file}" -attach "${coverImagePath}" -metadata:s:t mimetype=image/jpeg -c copy "${file.file}_temp.${file.container}"`;
+    } else {
+        response.infoLog += 'Video file format not supported. Skipping.\n';
+        return response;
+    }
     execSync(command);
 
     // Delete the original video file
