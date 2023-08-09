@@ -57,9 +57,11 @@ const plugin = (file, librarySettings, inputs, otherArguments) => {
     })
         .then(function (res) {
             console.log('Discord notification sent');
+            response.infoLog += 'Discord notification sent\n';
         })
         .catch(function (res) {
             console.log('Discord notification failed');
+            response.infoLog += 'Discord notification failed\n';
         });
 
     return response;
